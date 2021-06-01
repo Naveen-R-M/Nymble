@@ -63,8 +63,7 @@ class _HomePageState extends State<HomePage> {
         gb.isEnabled = false;
         int winner = checkWinner();
         if (winner == -1) {
-          if (buttonsList.every((element) => element.imagePath != "")) {
-            winner = 0;
+          if (buttonsList.every((element) => element.imagePath != '')) {
             showDialog(
               context: context,
               builder: (builder) => new CustomDialog(
@@ -114,7 +113,6 @@ class _HomePageState extends State<HomePage> {
         }
       }
       playGame(bestMove);
-      checkWinner();
       return;
     }
   }

@@ -8,7 +8,7 @@ class GameButton {
   bool isEnabled;
   GameButton({
     this.id,
-    this.imagePath = "",
+    this.imagePath = '',
     this.bgColor = MyColors.GRID_BCK,
     this.isEnabled = true,
   });

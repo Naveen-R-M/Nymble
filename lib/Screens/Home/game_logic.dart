@@ -16,17 +16,8 @@ class _GamePageState extends State<GamePage> {
   String human = 'Assets/Images/letterX.png';
   String bot = 'Assets/Images/donut.png';
 
-  var dict = {
-    0: ' ',
-    1: ' ',
-    2: ' ',
-    3: ' ',
-    4: ' ',
-    5: ' ',
-    6: ' ',
-    7: ' ',
-    8: ' ',
-  };
+  var dict;
+  var count;
 
   var playerOne;
   var playerTwo;
@@ -40,9 +31,21 @@ class _GamePageState extends State<GamePage> {
   }
 
   List<GameButton> buttonInit() {
+    count = 0;
     playerOne = [];
     playerTwo = [];
     activePlayer = 1;
+    dict = {
+      1: ' ',
+      2: ' ',
+      3: ' ',
+      4: ' ',
+      5: ' ',
+      6: ' ',
+      7: ' ',
+      8: ' ',
+      9: ' ',
+    };
 
     var gameButtons = <GameButton>[
       new GameButton(id: 1),
@@ -58,31 +61,60 @@ class _GamePageState extends State<GamePage> {
     return gameButtons;
   }
 
-  void playGame(GameButton gb) {
-    setState(
-      () {
-        if (activePlayer == 1) {
-          gb.imagePath = 'Assets/Images/letterX.png';
-          gb.bgColor = Colors.green.shade100;
-          activePlayer = 2;
-          playerOne.add(gb.id);
-          dict[gb.id] = 'O';
-        } else {
-          gb.imagePath = 'Assets/Images/donut.png';
-          gb.bgColor = Colors.black;
-          activePlayer = 1;
-          playerTwo.add(gb.id);
-          dict[gb.id] = 'X';
-        }
-        gb.isEnabled = false;
-        if (activePlayer == 2) {
-          autoPlay('hard');
-        }
-      },
-    );
+  void helpClick() {
+    print('dict keys : ${dict.keys}');
   }
 
-  void autoPlay(String x) {
+  void play(GameButton gb) {
+    count = 0;
+    setState(() {
+      dict[gb.id] = 'X';
+      playerOne.add(gb.id);
+      gb.bgColor = Colors.black12;
+      gb.isEnabled = false;
+      gb.imagePath = human;
+
+      print('worked till here.');
+      for (var keys in dict.keys) {
+        if (dict[keys] != ' ') {
+          count += 1;
+        }
+        print('count : $count');
+        print('dict : $dict');
+      }
+      if (count != 9) {
+        var bestMove = autoPlay('hard');
+        print('bestMove : $bestMove');
+        print('Worked till here..');
+        playerTwo.add(buttonsList[bestMove - 1].id);
+        dict[buttonsList[bestMove - 1].id] = 'O';
+        buttonsList[bestMove - 1].isEnabled = false;
+        buttonsList[bestMove - 1].imagePath = bot;
+        buttonsList[bestMove - 1].bgColor = Colors.black12;
+      }
+    });
+    if (checkWhichMarkWon('X')) {
+      showDialog(
+        context: context,
+        builder: (_) => new CustomDialog(
+            "You Won", "Press the reset button to start again.", resetGame),
+      );
+    } else if (checkWhichMarkWon('O')) {
+      showDialog(
+        context: context,
+        builder: (_) => new CustomDialog(
+            "You Lost", "Press the reset button to start again.", resetGame),
+      );
+    } else if (checkDraw()) {
+      showDialog(
+        context: context,
+        builder: (_) => new CustomDialog(
+            "Match Draw", "Press the reset button to start again.", resetGame),
+      );
+    }
+  }
+
+  autoPlay(String x) {
     if (x == 'easy') {
       print('easy');
       var emptyGrids = [];
@@ -96,7 +128,7 @@ class _GamePageState extends State<GamePage> {
       var randIndex = random.nextInt(emptyGrids.length - 1);
       var gridId = emptyGrids[randIndex];
       int i = buttonsList.indexWhere((element) => element.id == gridId);
-      playGame(buttonsList[i]);
+      play(buttonsList[i]);
     } else {
       print('hard');
       var bestScore = -8000;
@@ -114,8 +146,7 @@ class _GamePageState extends State<GamePage> {
           }
         }
       }
-      playGame(buttonsList[bestMove]);
-      return;
+      return bestMove;
     }
   }
 
@@ -123,37 +154,9 @@ class _GamePageState extends State<GamePage> {
     var bestScore;
     var score;
 
-    if (checkWhichMarkWon('O')) {
-      showDialog(
-        context: context,
-        builder: (builder) => new CustomDialog(
-          'Match Won by Bot',
-          'Press the reset button to start again',
-          resetGame,
-        ),
-      );
-      return 1;
-    } else if (checkWhichMarkWon('X')) {
-      showDialog(
-        context: context,
-        builder: (builder) => new CustomDialog(
-          'Match Won by you',
-          'Press the reset button to start again',
-          resetGame,
-        ),
-      );
-      return -1;
-    } else if (checkDraw()) {
-      showDialog(
-        context: context,
-        builder: (builder) => new CustomDialog(
-          'Match Draw',
-          'Press the reset button to start again',
-          resetGame,
-        ),
-      );
-      return 0;
-    }
+    if (checkDraw()) return 0;
+    if (checkWhichMarkWon('X')) return -1;
+    if (checkWhichMarkWon('O')) return 1;
 
     if (isMaximizing) {
       bestScore = -800;
@@ -192,21 +195,21 @@ class _GamePageState extends State<GamePage> {
   }
 
   checkWhichMarkWon(mark) {
-    if (dict[0] == dict[1] && dict[0] == dict[2] && dict[0] == mark)
+    if (dict[1] == dict[2] && dict[1] == dict[3] && dict[1] == mark)
       return true;
-    else if (dict[3] == dict[4] && dict[3] == dict[5] && dict[3] == mark)
+    else if (dict[4] == dict[5] && dict[4] == dict[6] && dict[4] == mark)
       return true;
-    else if (dict[6] == dict[7] && dict[6] == dict[8] && dict[6] == mark)
-      return true;
-    else if (dict[0] == dict[3] && dict[0] == dict[6] && dict[0] == mark)
+    else if (dict[7] == dict[8] && dict[7] == dict[9] && dict[7] == mark)
       return true;
     else if (dict[1] == dict[4] && dict[1] == dict[7] && dict[1] == mark)
       return true;
     else if (dict[2] == dict[5] && dict[2] == dict[8] && dict[2] == mark)
       return true;
-    else if (dict[0] == dict[4] && dict[0] == dict[8] && dict[0] == mark)
+    else if (dict[3] == dict[6] && dict[3] == dict[9] && dict[3] == mark)
       return true;
-    else if (dict[6] == dict[4] && dict[6] == dict[2] && dict[6] == mark)
+    else if (dict[1] == dict[5] && dict[1] == dict[9] && dict[1] == mark)
+      return true;
+    else if (dict[7] == dict[5] && dict[7] == dict[3] && dict[7] == mark)
       return true;
     else
       return false;
@@ -258,27 +261,32 @@ class _GamePageState extends State<GamePage> {
                   shrinkWrap: true,
                   padding: const EdgeInsets.all(8.0),
                   itemCount: buttonsList.length,
-                  itemBuilder: (context, index) => new SizedBox(
-                    height: 100,
-                    width: 100,
-                    child: new ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: buttonsList[index].bgColor,
-                        padding: const EdgeInsets.all(8.0),
+                  itemBuilder: (context, index) {
+                    return new SizedBox(
+                      height: 100,
+                      width: 100,
+                      child: new ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: buttonsList[index].bgColor,
+                          padding: const EdgeInsets.all(8.0),
+                        ),
+                        onPressed: buttonsList[index].isEnabled
+                            ? () {
+                                print('index : $index');
+                                play(buttonsList[index]);
+                              }
+                            : null,
+                        child: buttonsList[index].imagePath != ""
+                            ? Image(
+                                image: AssetImage(
+                                  buttonsList[index].imagePath,
+                                ),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
                       ),
-                      onPressed: buttonsList[index].isEnabled
-                          ? () => playGame(buttonsList[index])
-                          : null,
-                      child: buttonsList[index].imagePath != ""
-                          ? Image(
-                              image: AssetImage(
-                                buttonsList[index].imagePath,
-                              ),
-                              fit: BoxFit.cover,
-                            )
-                          : null,
-                    ),
-                  ),
+                    );
+                  },
                 ),
                 SizedBox(
                   height: 30,
@@ -331,7 +339,7 @@ class _GamePageState extends State<GamePage> {
                             color: MyColors.ON_WIN_POPUP,
                             elevation: 10.0,
                             child: InkWell(
-                              onTap: () {},
+                              onTap: () => helpClick(),
                               splashColor: Colors.black26,
                               child: SizedBox(
                                 height: 75,
@@ -370,5 +378,11 @@ class _GamePageState extends State<GamePage> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 }
