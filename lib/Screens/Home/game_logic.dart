@@ -18,6 +18,7 @@ class _GamePageState extends State<GamePage> {
 
   var dict;
   var count;
+  bool botFirst;
 
   var playerOne;
   var playerTwo;
@@ -25,12 +26,12 @@ class _GamePageState extends State<GamePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     buttonsList = buttonInit();
   }
 
   List<GameButton> buttonInit() {
+    botFirst = false;
     count = 0;
     playerOne = [];
     playerTwo = [];
@@ -61,37 +62,39 @@ class _GamePageState extends State<GamePage> {
     return gameButtons;
   }
 
-  void helpClick() {
-    print('dict keys : ${dict.keys}');
+  void botPlay() {
+    var bestMove = autoPlay('hard');
+    print('bestMove : $bestMove');
+    print('Worked till here..');
+    playerTwo.add(buttonsList[bestMove - 1].id);
+    dict[buttonsList[bestMove - 1].id] = 'O';
+    buttonsList[bestMove - 1].isEnabled = false;
+    buttonsList[bestMove - 1].imagePath = bot;
+    buttonsList[bestMove - 1].bgColor = Colors.black12;
+  }
+
+  void humanPlay(gb) {
+    dict[gb.id] = 'X';
+    playerOne.add(gb.id);
+    gb.bgColor = Colors.black12;
+    gb.isEnabled = false;
+    gb.imagePath = human;
+  }
+
+  int dictCount(count) {
+    for (var keys in dict.keys) {
+      if (dict[keys] != ' ') {
+        count += 1;
+      }
+    }
+    return count;
   }
 
   void play(GameButton gb) {
-    count = 0;
     setState(() {
-      dict[gb.id] = 'X';
-      playerOne.add(gb.id);
-      gb.bgColor = Colors.black12;
-      gb.isEnabled = false;
-      gb.imagePath = human;
-
-      print('worked till here.');
-      for (var keys in dict.keys) {
-        if (dict[keys] != ' ') {
-          count += 1;
-        }
-        print('count : $count');
-        print('dict : $dict');
-      }
-      if (count != 9) {
-        var bestMove = autoPlay('hard');
-        print('bestMove : $bestMove');
-        print('Worked till here..');
-        playerTwo.add(buttonsList[bestMove - 1].id);
-        dict[buttonsList[bestMove - 1].id] = 'O';
-        buttonsList[bestMove - 1].isEnabled = false;
-        buttonsList[bestMove - 1].imagePath = bot;
-        buttonsList[bestMove - 1].bgColor = Colors.black12;
-      }
+      humanPlay(gb);
+      if (dictCount(0) != 9) humanPlay(gb);
+      if (dictCount(0) != 9) botPlay();
     });
     if (checkWhichMarkWon('X')) {
       showDialog(
@@ -339,7 +342,14 @@ class _GamePageState extends State<GamePage> {
                             color: MyColors.ON_WIN_POPUP,
                             elevation: 10.0,
                             child: InkWell(
-                              onTap: () => helpClick(),
+                              onTap: botFirst == false
+                                  ? () {
+                                      setState(() {
+                                        botPlay();
+                                        botFirst = true;
+                                      });
+                                    }
+                                  : null,
                               splashColor: Colors.black26,
                               child: SizedBox(
                                 height: 75,
@@ -348,7 +358,9 @@ class _GamePageState extends State<GamePage> {
                                   padding: EdgeInsets.all(5.0),
                                   child: Image(
                                     image: AssetImage(
-                                      'Assets/Images/question_mark_leaves.png',
+                                      botFirst == false
+                                          ? 'Assets/Images/one_leaves.png'
+                                          : 'Assets/Images/two_leaves.png',
                                     ),
                                     width: 60,
                                     height: 60,
@@ -359,7 +371,54 @@ class _GamePageState extends State<GamePage> {
                           ),
                         ),
                         Text(
-                          'Help',
+                          'Player',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            fontSize: 16,
+                            color: Colors.brown.shade700,
+                            height: 1.5,
+                            letterSpacing: 0.75,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        ClipOval(
+                          child: Material(
+                            color: MyColors.ON_WIN_POPUP,
+                            elevation: 10.0,
+                            child: InkWell(
+                              onTap: botFirst == false
+                                  ? () {
+                                      setState(() {
+                                        botPlay();
+                                        botFirst = true;
+                                      });
+                                    }
+                                  : null,
+                              splashColor: Colors.black26,
+                              child: SizedBox(
+                                height: 75,
+                                width: 75,
+                                child: Padding(
+                                  padding: EdgeInsets.all(12.0),
+                                  child: Image(
+                                    image: AssetImage(
+                                      botFirst == false
+                                          ? 'Assets/Images/red_bulb.png'
+                                          : 'Assets/Images/green_bulb.png',
+                                    ),
+                                    width: 60,
+                                    height: 60,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'Difficulty',
                           style: TextStyle(
                             fontWeight: FontWeight.w900,
                             fontSize: 16,
