@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:nymble/Components/custom_dialog.dart';
 import 'package:nymble/Screens/Home/game_button.dart';
+import 'package:nymble/Screens/Spotify/spotify_page.dart';
 
 import '../../my_color.dart';
 
@@ -262,7 +263,10 @@ class _GamePageState extends State<GamePage> {
                     crossAxisSpacing: 9.0,
                   ),
                   shrinkWrap: true,
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 8.0,
+                  ),
                   itemCount: buttonsList.length,
                   itemBuilder: (context, index) {
                     return new SizedBox(
@@ -271,7 +275,7 @@ class _GamePageState extends State<GamePage> {
                       child: new ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           primary: buttonsList[index].bgColor,
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(16.0),
                         ),
                         onPressed: buttonsList[index].isEnabled
                             ? () {
@@ -308,8 +312,8 @@ class _GamePageState extends State<GamePage> {
                               onTap: () => resetGame(),
                               splashColor: Colors.black26,
                               child: SizedBox(
-                                height: 75,
-                                width: 75,
+                                height: 60,
+                                width: 60,
                                 child: Padding(
                                   padding: EdgeInsets.all(8.0),
                                   child: Image(
@@ -352,8 +356,8 @@ class _GamePageState extends State<GamePage> {
                                   : null,
                               splashColor: Colors.black26,
                               child: SizedBox(
-                                height: 75,
-                                width: 75,
+                                height: 60,
+                                width: 60,
                                 child: Padding(
                                   padding: EdgeInsets.all(5.0),
                                   child: Image(
@@ -389,18 +393,17 @@ class _GamePageState extends State<GamePage> {
                             color: MyColors.ON_WIN_POPUP,
                             elevation: 10.0,
                             child: InkWell(
-                              onTap: botFirst == false
-                                  ? () {
-                                      setState(() {
-                                        botPlay();
-                                        botFirst = true;
-                                      });
-                                    }
-                                  : null,
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (builder) => SpotifyPage(),
+                                  ),
+                                );
+                              },
                               splashColor: Colors.black26,
                               child: SizedBox(
-                                height: 75,
-                                width: 75,
+                                height: 60,
+                                width: 60,
                                 child: Padding(
                                   padding: EdgeInsets.all(12.0),
                                   child: Image(

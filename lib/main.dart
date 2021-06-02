@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:nymble/Screens/Home/game_logic.dart';
-import 'package:nymble/Screens/Home/home_screen.dart';
 
 void main() {
   runApp(MyApp());
