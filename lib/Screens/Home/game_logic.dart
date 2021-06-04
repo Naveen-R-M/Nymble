@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:nymble/Components/custom_dialog.dart';
 import 'package:nymble/Screens/Home/game_button.dart';
 import 'package:nymble/Screens/Spotify/spotify_page.dart';
+import 'package:nymble/Screens/Spotify/spotify_template.dart';
 
 import '../../my_color.dart';
 
@@ -233,6 +234,46 @@ class _GamePageState extends State<GamePage> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          new FloatingActionButton(
+            heroTag: null,
+            onPressed: () {},
+            child: Icon(
+              Icons.help_outline_rounded,
+              size: 40,
+              color: MyColors.GRID_BCK,
+            ),
+            backgroundColor: Colors.redAccent.withOpacity(0.85),
+            splashColor: MyColors.FLOATING_ACTION_BUTTON,
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          new FloatingActionButton(
+            heroTag: null,
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (builder) => SpotifyPage(),
+                ),
+              );
+            },
+            child: Icon(
+              Icons.music_note_rounded,
+              size: 40,
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.redAccent.withOpacity(0.85),
+            splashColor: MyColors.FLOATING_ACTION_BUTTON,
+            focusColor: MyColors.FLOATING_ACTION_BUTTON,
+          ),
+          SizedBox(
+            height: 20,
+          ),
+        ],
+      ),
       body: Stack(
         children: [
           Container(
@@ -396,7 +437,7 @@ class _GamePageState extends State<GamePage> {
                               onTap: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (builder) => SpotifyPage(),
+                                    builder: (builder) => SpotifyTemplate(),
                                   ),
                                 );
                               },
