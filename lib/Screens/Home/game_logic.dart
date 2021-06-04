@@ -233,252 +233,284 @@ class _GamePageState extends State<GamePage> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          new FloatingActionButton(
-            heroTag: null,
-            onPressed: () {},
-            child: Icon(
-              Icons.help_outline_rounded,
-              size: 40,
-              color: MyColors.GRID_BCK,
-            ),
-            backgroundColor: Colors.redAccent.withOpacity(0.85),
-            splashColor: MyColors.FLOATING_ACTION_BUTTON,
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          new FloatingActionButton(
-            heroTag: null,
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (builder) => SpotifyPage(),
+    return WillPopScope(
+      onWillPop: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                'Are you sure ?',
+                style: TextStyle(
+                  fontWeight: FontWeight.w200,
                 ),
-              );
-            },
-            child: Icon(
-              Icons.music_note_rounded,
-              size: 40,
-              color: Colors.white,
-            ),
-            backgroundColor: Colors.redAccent.withOpacity(0.85),
-            splashColor: MyColors.FLOATING_ACTION_BUTTON,
-            focusColor: MyColors.FLOATING_ACTION_BUTTON,
-          ),
-          SizedBox(
-            height: 20,
-          ),
-        ],
-      ),
-      body: Stack(
-        children: [
-          Container(
-            height: height,
-            width: width,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(
-                  'Assets/Images/game_bck_green_1.jpg',
-                ),
-                fit: BoxFit.cover,
               ),
-            ),
-          ),
-          SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(
-                  height: 20,
+              content: Text(
+                'Click yes to exit the app..',
+                style: TextStyle(
+                  fontWeight: FontWeight.w100,
                 ),
-                GridView.builder(
-                  gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 1.0,
-                    mainAxisSpacing: 9.0,
-                    crossAxisSpacing: 9.0,
-                  ),
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 8.0,
-                  ),
-                  itemCount: buttonsList.length,
-                  itemBuilder: (context, index) {
-                    return new SizedBox(
-                      height: 100,
-                      width: 100,
-                      child: new ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: buttonsList[index].bgColor,
-                          padding: const EdgeInsets.all(16.0),
-                        ),
-                        onPressed: buttonsList[index].isEnabled
-                            ? () {
-                                print('index : $index');
-                                play(buttonsList[index]);
-                              }
-                            : null,
-                        child: buttonsList[index].imagePath != ""
-                            ? Image(
-                                image: AssetImage(
-                                  buttonsList[index].imagePath,
-                                ),
-                                fit: BoxFit.cover,
-                              )
-                            : null,
-                      ),
-                    );
+              ),
+              actions: [
+                MaterialButton(
+                  onPressed: () {
+                    Navigator.pop(context, true);
                   },
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
-                      children: [
-                        ClipOval(
-                          child: Material(
-                            color: MyColors.ON_WIN_POPUP,
-                            elevation: 10.0,
-                            child: InkWell(
-                              onTap: () => resetGame(),
-                              splashColor: Colors.black26,
-                              child: SizedBox(
-                                height: 60,
-                                width: 60,
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Image(
-                                    image: AssetImage(
-                                      'Assets/Images/refresh_leaves.png',
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Text(
-                          'Reset',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w900,
-                            fontSize: 16,
-                            color: Colors.brown.shade700,
-                            height: 1.5,
-                            letterSpacing: 0.75,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        ClipOval(
-                          child: Material(
-                            color: MyColors.ON_WIN_POPUP,
-                            elevation: 10.0,
-                            child: InkWell(
-                              onTap: botFirst == false
-                                  ? () {
-                                      setState(() {
-                                        botPlay();
-                                        botFirst = true;
-                                      });
-                                    }
-                                  : null,
-                              splashColor: Colors.black26,
-                              child: SizedBox(
-                                height: 60,
-                                width: 60,
-                                child: Padding(
-                                  padding: EdgeInsets.all(5.0),
-                                  child: Image(
-                                    image: AssetImage(
-                                      botFirst == false
-                                          ? 'Assets/Images/one_leaves.png'
-                                          : 'Assets/Images/two_leaves.png',
-                                    ),
-                                    width: 60,
-                                    height: 60,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Text(
-                          'Player',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w900,
-                            fontSize: 16,
-                            color: Colors.brown.shade700,
-                            height: 1.5,
-                            letterSpacing: 0.75,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        ClipOval(
-                          child: Material(
-                            color: MyColors.ON_WIN_POPUP,
-                            elevation: 10.0,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (builder) => SpotifyTemplate(),
-                                  ),
-                                );
-                              },
-                              splashColor: Colors.black26,
-                              child: SizedBox(
-                                height: 60,
-                                width: 60,
-                                child: Padding(
-                                  padding: EdgeInsets.all(12.0),
-                                  child: Image(
-                                    image: AssetImage(
-                                      botFirst == false
-                                          ? 'Assets/Images/red_bulb.png'
-                                          : 'Assets/Images/green_bulb.png',
-                                    ),
-                                    width: 60,
-                                    height: 60,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Text(
-                          'Difficulty',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w900,
-                            fontSize: 16,
-                            color: Colors.brown.shade700,
-                            height: 1.5,
-                            letterSpacing: 0.75,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                  child: Text('Yes'),
                 ),
               ],
+            );
+          },
+        );
+        return;
+      },
+      child: Scaffold(
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            new FloatingActionButton(
+              heroTag: null,
+              onPressed: () {},
+              child: Icon(
+                Icons.help_outline_rounded,
+                size: 40,
+                color: MyColors.GRID_BCK,
+              ),
+              backgroundColor: Colors.redAccent.withOpacity(0.85),
+              splashColor: MyColors.FLOATING_ACTION_BUTTON,
             ),
-          ),
-        ],
+            SizedBox(
+              height: 20,
+            ),
+            new FloatingActionButton(
+              heroTag: null,
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (builder) => SpotifyPage(),
+                  ),
+                );
+              },
+              child: Icon(
+                Icons.music_note_rounded,
+                size: 40,
+                color: Colors.white,
+              ),
+              backgroundColor: Colors.redAccent.withOpacity(0.85),
+              splashColor: MyColors.FLOATING_ACTION_BUTTON,
+              focusColor: MyColors.FLOATING_ACTION_BUTTON,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+          ],
+        ),
+        body: Stack(
+          children: [
+            Container(
+              height: height,
+              width: width,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(
+                    'Assets/Images/game_bck_green_1.jpg',
+                  ),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  GridView.builder(
+                    gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      childAspectRatio: 1.0,
+                      mainAxisSpacing: 9.0,
+                      crossAxisSpacing: 9.0,
+                    ),
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 8.0,
+                    ),
+                    itemCount: buttonsList.length,
+                    itemBuilder: (context, index) {
+                      return new SizedBox(
+                        height: 100,
+                        width: 100,
+                        child: new ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: buttonsList[index].bgColor,
+                            padding: const EdgeInsets.all(16.0),
+                          ),
+                          onPressed: buttonsList[index].isEnabled
+                              ? () {
+                                  print('index : $index');
+                                  play(buttonsList[index]);
+                                }
+                              : null,
+                          child: buttonsList[index].imagePath != ""
+                              ? Image(
+                                  image: AssetImage(
+                                    buttonsList[index].imagePath,
+                                  ),
+                                  fit: BoxFit.cover,
+                                )
+                              : null,
+                        ),
+                      );
+                    },
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        children: [
+                          ClipOval(
+                            child: Material(
+                              color: MyColors.ON_WIN_POPUP,
+                              elevation: 10.0,
+                              child: InkWell(
+                                onTap: () => resetGame(),
+                                splashColor: Colors.black26,
+                                child: SizedBox(
+                                  height: 60,
+                                  width: 60,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Image(
+                                      image: AssetImage(
+                                        'Assets/Images/refresh_leaves.png',
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            'Reset',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 16,
+                              color: Colors.brown.shade700,
+                              height: 1.5,
+                              letterSpacing: 0.75,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          ClipOval(
+                            child: Material(
+                              color: MyColors.ON_WIN_POPUP,
+                              elevation: 10.0,
+                              child: InkWell(
+                                onTap: botFirst == false
+                                    ? () {
+                                        setState(() {
+                                          botPlay();
+                                          botFirst = true;
+                                        });
+                                      }
+                                    : null,
+                                splashColor: Colors.black26,
+                                child: SizedBox(
+                                  height: 60,
+                                  width: 60,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(5.0),
+                                    child: Image(
+                                      image: AssetImage(
+                                        botFirst == false
+                                            ? 'Assets/Images/one_leaves.png'
+                                            : 'Assets/Images/two_leaves.png',
+                                      ),
+                                      width: 60,
+                                      height: 60,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            'Player',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 16,
+                              color: Colors.brown.shade700,
+                              height: 1.5,
+                              letterSpacing: 0.75,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          ClipOval(
+                            child: Material(
+                              color: MyColors.ON_WIN_POPUP,
+                              elevation: 10.0,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (builder) => SpotifyTemplate(),
+                                    ),
+                                  );
+                                },
+                                splashColor: Colors.black26,
+                                child: SizedBox(
+                                  height: 60,
+                                  width: 60,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(12.0),
+                                    child: Image(
+                                      image: AssetImage(
+                                        botFirst == false
+                                            ? 'Assets/Images/red_bulb.png'
+                                            : 'Assets/Images/green_bulb.png',
+                                      ),
+                                      width: 60,
+                                      height: 60,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            'Difficulty',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 16,
+                              color: Colors.brown.shade700,
+                              height: 1.5,
+                              letterSpacing: 0.75,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

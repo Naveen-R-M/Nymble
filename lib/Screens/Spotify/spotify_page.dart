@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:nymble/API/api_calls.dart';
 import 'package:nymble/Screens/Spotify/screens/home_tab.dart';
@@ -15,6 +17,7 @@ class SpotifyPage extends StatefulWidget {
 class _SpotifyPageState extends State<SpotifyPage> {
   int _selectedIndex = 0;
   PageController _pageController;
+  List<Map> newReleases = [];
 
   var authToken;
 
@@ -26,11 +29,29 @@ class _SpotifyPageState extends State<SpotifyPage> {
     super.initState();
     spotifyInit();
     _pageController = PageController(initialPage: 0);
+    setState(() {});
   }
 
   getNewReleases(authToken) async {
     var response = await APICalls.getSpotifyNewReleases(authToken);
-    print('status code : $response');
+    var items = jsonDecode(response.body)["albums"]["items"];
+    for (var i = 0; i < items.length; i++) {
+      var path = items[i]["images"][1];
+      Map map = new Map();
+      map['height'] = path["height"];
+      map['width'] = path["width"];
+      map['url'] = path["url"];
+
+      map['name'] = items[i]['name'];
+      map['id'] = items[i]['id'];
+      map['type'] = items[i]['type'];
+      map['uri'] = items[i]['uri'];
+      map['artist'] = items[i]['artists'][0]['name'];
+
+      newReleases.add(map);
+    }
+
+    print('status code : $newReleases[0]');
   }
 
   void _onTapped(int index) {
@@ -52,35 +73,29 @@ class _SpotifyPageState extends State<SpotifyPage> {
               'playlist-modify-private, ugc-image-upload,'
               'user-follow-read, user-follow-modify,'
               'user-read-playback-state, user-modify-playback-state,'
-              'user-read-currently-playing'
-            
+              'user-read-currently-playing'    
   */
   spotifyInit() async {
     try {
       await SpotifySdk.connectToSpotifyRemote(
           clientId: clientId, redirectUrl: redirectUrl);
-      await SpotifySdk.getAuthenticationToken(
-              clientId: clientId,
-              redirectUrl: redirectUrl,
-              scope: 'user-read-playback-position,'
-                  'user-read-private, user-read-email,'
-                  'playlist-read-private, user-library-read,'
-                  'user-library-modify, user-top-read,'
-                  'playlist-read-collaborative, playlist-modify-public,'
-                  'playlist-modify-private, ugc-image-upload,'
-                  'user-follow-read, user-follow-modify,'
-                  'user-read-playback-state, user-modify-playback-state,'
-                  'user-read-currently-playing')
-          .then(
-        (authToken) {
-          authToken = authToken;
-          getNewReleases(authToken);
-        },
-      );
+      authToken = await SpotifySdk.getAuthenticationToken(
+          clientId: clientId,
+          redirectUrl: redirectUrl,
+          scope: 'user-read-playback-position,'
+              'user-read-private, user-read-email,'
+              'playlist-read-private, user-library-read,'
+              'user-library-modify, user-top-read,'
+              'playlist-read-collaborative, playlist-modify-public,'
+              'playlist-modify-private, ugc-image-upload,'
+              'user-follow-read, user-follow-modify,'
+              'user-read-playback-state, user-modify-playback-state,'
+              'user-read-currently-playing');
+      await getNewReleases(authToken.toString());
       print('Auth Token : $authToken');
     } catch (e) {
       print(
-        e.message,
+        e,
       );
     }
   }
@@ -138,7 +153,11 @@ class _SpotifyPageState extends State<SpotifyPage> {
                 _selectedIndex = index;
               }),
               children: [
-                HomeTab(),
+                HomeTab(
+                  newReleases: newReleases,
+                  myPlaylists: null,
+                  recentlyPlayed: null,
+                ),
                 SearchTab(),
                 LibraryTab(),
               ],
