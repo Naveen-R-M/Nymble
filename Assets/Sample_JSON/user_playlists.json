@@ -1,0 +1,46 @@
+{
+    "href": "https://api.spotify.com/v1/users/31m7ax4qzszs2okmw45ue3xrpm3y/playlists?offset=0&limit=20",
+    "items": [
+        {
+            "collaborative": false,
+            "description": "",
+            "external_urls": {
+                "spotify": "https://open.spotify.com/playlist/4LTtTw9f1M3ZIJHSXX49mF"
+            },
+            "href": "https://api.spotify.com/v1/playlists/4LTtTw9f1M3ZIJHSXX49mF",
+            "id": "4LTtTw9f1M3ZIJHSXX49mF",
+            "images": [
+                {
+                    "height": 640,
+                    "url": "https://i.scdn.co/image/ab67616d0000b273f3582107f127c2765fafb431",
+                    "width": 640
+                }
+            ],
+            "name": "Favs",
+            "owner": {
+                "display_name": "Naveen",
+                "external_urls": {
+                    "spotify": "https://open.spotify.com/user/31m7ax4qzszs2okmw45ue3xrpm3y"
+                },
+                "href": "https://api.spotify.com/v1/users/31m7ax4qzszs2okmw45ue3xrpm3y",
+                "id": "31m7ax4qzszs2okmw45ue3xrpm3y",
+                "type": "user",
+                "uri": "spotify:user:31m7ax4qzszs2okmw45ue3xrpm3y"
+            },
+            "primary_color": null,
+            "public": true,
+            "snapshot_id": "NCwwNTJmYzE3YzNlZjZkNTc4ZWM1MzJhZjJiN2NiOTAzOTRkZTYzOTFk",
+            "tracks": {
+                "href": "https://api.spotify.com/v1/playlists/4LTtTw9f1M3ZIJHSXX49mF/tracks",
+                "total": 3
+            },
+            "type": "playlist",
+            "uri": "spotify:playlist:4LTtTw9f1M3ZIJHSXX49mF"
+        }
+    ],
+    "limit": 20,
+    "next": null,
+    "offset": 0,
+    "previous": null,
+    "total": 1
+}

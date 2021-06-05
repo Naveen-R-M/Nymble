@@ -18,18 +18,20 @@ class _SpotifyPageState extends State<SpotifyPage> {
   int _selectedIndex = 0;
   PageController _pageController;
   List<Map> newReleases = [];
+  List<Map> userPlaylists = [];
+  List<Map> userRecentlyPlayed = [];
 
   var authToken;
 
   final clientId = '89377afecbe44b12925ad8fcbf67af7d';
   final redirectUrl = 'https://github.com/';
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     spotifyInit();
     _pageController = PageController(initialPage: 0);
-    setState(() {});
   }
 
   getNewReleases(authToken) async {
@@ -38,10 +40,9 @@ class _SpotifyPageState extends State<SpotifyPage> {
     for (var i = 0; i < items.length; i++) {
       var path = items[i]["images"][1];
       Map map = new Map();
-      map['height'] = path["height"];
-      map['width'] = path["width"];
       map['url'] = path["url"];
-
+      map['height'] = path['height'];
+      map['width'] = path['width'];
       map['name'] = items[i]['name'];
       map['id'] = items[i]['id'];
       map['type'] = items[i]['type'];
@@ -50,8 +51,49 @@ class _SpotifyPageState extends State<SpotifyPage> {
 
       newReleases.add(map);
     }
+    print('New Releases : $newReleases[0]');
+  }
 
-    print('status code : $newReleases[0]');
+  getUserPlaylist(authToken) async {
+    var response = await APICalls.getMyPlaylists(authToken);
+    var items = jsonDecode(response.body)["items"];
+
+    for (var i = 0; i < items.length; i++) {
+      var path = items[i];
+      Map map = new Map();
+      map['id'] = path['id'];
+      map['name'] = path['name'];
+      map['uri'] = path['uri'];
+      map['url'] = path['images'][0]['url'];
+      map['height'] = path['images'][0]['height'];
+      map['width'] = path['images'][0]['width'];
+      print('map : $map');
+      userPlaylists.add(map);
+    }
+    print('Items Length : ${items.length}');
+    print('My Playlists : $userPlaylists');
+  }
+
+  getUserRecentlyPlayed(authToken) async {
+    var response = await APICalls.getUserRecentlyPlayed(authToken);
+    var items = jsonDecode(response.body)["items"];
+
+    for (var i = 0; i < items.length; i++) {
+      var path = items[i];
+      Map map = new Map();
+      map['id'] = path['track']['album']['id'];
+      map['name'] = path['track']['album']['name'];
+      map['type'] = path['track']['album']['type'];
+      map['artist'] = path['track']['album']['artists'][0]['name'];
+      map['uri'] = path['track']['album']['uri'];
+      map['url'] = path['track']['album']['images'][1]['url'];
+      map['height'] = path['track']['album']['images'][1]['height'];
+      map['width'] = path['track']['album']['images'][1]['width'];
+      print('map : $map');
+      userRecentlyPlayed.add(map);
+    }
+    print('Items Length : ${items.length}');
+    print('Recently Played : $userRecentlyPlayed');
   }
 
   void _onTapped(int index) {
@@ -82,7 +124,7 @@ class _SpotifyPageState extends State<SpotifyPage> {
       authToken = await SpotifySdk.getAuthenticationToken(
           clientId: clientId,
           redirectUrl: redirectUrl,
-          scope: 'user-read-playback-position,'
+          scope: 'user-read-playback-position, user-read-recently-played,'
               'user-read-private, user-read-email,'
               'playlist-read-private, user-library-read,'
               'user-library-modify, user-top-read,'
@@ -92,12 +134,15 @@ class _SpotifyPageState extends State<SpotifyPage> {
               'user-read-playback-state, user-modify-playback-state,'
               'user-read-currently-playing');
       await getNewReleases(authToken.toString());
+      await getUserPlaylist(authToken.toString());
+      await getUserRecentlyPlayed(authToken.toString());
       print('Auth Token : $authToken');
     } catch (e) {
       print(
         e,
       );
     }
+    setState(() {});
   }
 
   @override
@@ -155,8 +200,9 @@ class _SpotifyPageState extends State<SpotifyPage> {
               children: [
                 HomeTab(
                   newReleases: newReleases,
-                  myPlaylists: null,
-                  recentlyPlayed: null,
+                  myPlaylists: userPlaylists,
+                  recentlyPlayed: userRecentlyPlayed,
+                  authToken: authToken,
                 ),
                 SearchTab(),
                 LibraryTab(),
