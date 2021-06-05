@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:nymble/Screens/Home/game_logic.dart';
+import 'package:nymble/my_color.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // TODO: implement initState
     super.initState();
     Timer(
-      Duration(milliseconds: 2500),
+      Duration(milliseconds: 5200),
       () {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
@@ -41,13 +44,51 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Container(
-        height: height,
         width: width,
-        color: Colors.amber.shade200,
+        height: height,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              stops: [0.25, 0.85],
+              end: Alignment.bottomLeft,
+              colors: [
+                MyColors.SPOTIFY_GREEN,
+                MyColors.SPOTIFY_BLACK,
+              ]),
+        ),
+        child: Center(
+          child: SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  'Nymble',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.dancingScript(
+                    color: MyColors.SPOTIFY_BLACK,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 2,
+                    fontSize: 40,
+                  ),
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                Lottie.asset('Assets/Loading_Animations/cup_loading.json'),
+                Spacer(),
+                Lottie.asset('Assets/Loading_Animations/man_thinking.json'),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -458,52 +458,52 @@ class _GamePageState extends State<GamePage> {
                           ),
                         ],
                       ),
-                      Column(
-                        children: [
-                          ClipOval(
-                            child: Material(
-                              color: MyColors.ON_WIN_POPUP,
-                              elevation: 10.0,
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (builder) => SpotifyTemplate(),
-                                    ),
-                                  );
-                                },
-                                splashColor: Colors.black26,
-                                child: SizedBox(
-                                  height: 60,
-                                  width: 60,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(12.0),
-                                    child: Image(
-                                      image: AssetImage(
-                                        botFirst == false
-                                            ? 'Assets/Images/red_bulb.png'
-                                            : 'Assets/Images/green_bulb.png',
-                                      ),
-                                      width: 60,
-                                      height: 60,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            'Difficulty',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 16,
-                              color: Colors.brown.shade700,
-                              height: 1.5,
-                              letterSpacing: 0.75,
-                            ),
-                          ),
-                        ],
-                      ),
+                      // Column(
+                      //   children: [
+                      //     ClipOval(
+                      //       child: Material(
+                      //         color: MyColors.ON_WIN_POPUP,
+                      //         elevation: 10.0,
+                      //         child: InkWell(
+                      //           onTap: () {
+                      //             Navigator.of(context).push(
+                      //               MaterialPageRoute(
+                      //                 builder: (builder) => SpotifyTemplate(),
+                      //               ),
+                      //             );
+                      //           },
+                      //           splashColor: Colors.black26,
+                      //           child: SizedBox(
+                      //             height: 60,
+                      //             width: 60,
+                      //             child: Padding(
+                      //               padding: EdgeInsets.all(12.0),
+                      //               child: Image(
+                      //                 image: AssetImage(
+                      //                   botFirst == false
+                      //                       ? 'Assets/Images/red_bulb.png'
+                      //                       : 'Assets/Images/green_bulb.png',
+                      //                 ),
+                      //                 width: 60,
+                      //                 height: 60,
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //     Text(
+                      //       'Difficulty',
+                      //       style: TextStyle(
+                      //         fontWeight: FontWeight.w900,
+                      //         fontSize: 16,
+                      //         color: Colors.brown.shade700,
+                      //         height: 1.5,
+                      //         letterSpacing: 0.75,
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                     ],
                   ),
                 ],
