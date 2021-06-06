@@ -66,4 +66,18 @@ class APICalls {
     );
     return response;
   }
+
+  static searchSongs(authToken, searchKey) async {
+    var response = await http.get(
+      Uri.parse(API.SPOTIFY_SEARCH_SONGS +
+          searchKey +
+          '&type=track%2Cartist%2Calbum'),
+      headers: <String, String>{
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $authToken',
+      },
+    );
+    return response;
+  }
 }

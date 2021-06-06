@@ -9,4 +9,6 @@ class API {
       'https://api.spotify.com/v1/playlists/';
   static const String SPOTIFY_GET_ARTIST_RECOMMENDATION =
       'https://api.spotify.com/v1/artists/1mYsTxnqsietFxj1OgoGbG/related-artists';
+  static const String SPOTIFY_SEARCH_SONGS =
+      'https://api.spotify.com/v1/search?q=';
 }

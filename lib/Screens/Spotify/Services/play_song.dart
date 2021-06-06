@@ -140,6 +140,9 @@ class _PlaySongState extends State<PlaySong>
               size: 75,
             ),
           ),
+          SizedBox(
+            height: 15,
+          ),
         ],
       ),
     );

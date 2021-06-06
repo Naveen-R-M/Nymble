@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:nymble/API/api_calls.dart';
 import 'package:nymble/Screens/Spotify/screens/home_tab.dart';
 import 'package:nymble/Screens/Spotify/screens/search_tab.dart';
@@ -119,8 +120,9 @@ class _SpotifyPageState extends State<SpotifyPage> {
   */
   spotifyInit() async {
     try {
-      await SpotifySdk.connectToSpotifyRemote(
+      var connectionStatus = await SpotifySdk.connectToSpotifyRemote(
           clientId: clientId, redirectUrl: redirectUrl);
+      print('connectionStatus : $connectionStatus');
       authToken = await SpotifySdk.getAuthenticationToken(
           clientId: clientId,
           redirectUrl: redirectUrl,
@@ -133,14 +135,14 @@ class _SpotifyPageState extends State<SpotifyPage> {
               'user-follow-read, user-follow-modify,'
               'user-read-playback-state, user-modify-playback-state,'
               'user-read-currently-playing');
+      print('Auth Token : $authToken');
       await getNewReleases(authToken.toString());
       await getUserPlaylist(authToken.toString());
       await getUserRecentlyPlayed(authToken.toString());
-      print('Auth Token : $authToken');
-    } catch (e) {
-      print(
-        e,
-      );
+    } on PlatformException catch (e) {
+      print(' error code ... : ${e.code}');
+    } on MissingPluginException {
+      print('not implemented');
     }
     setState(() {});
   }

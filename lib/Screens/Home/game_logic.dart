@@ -269,6 +269,7 @@ class _GamePageState extends State<GamePage> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             new FloatingActionButton(
+              key: Key('helpButton'),
               heroTag: null,
               onPressed: () {},
               child: Icon(
@@ -283,6 +284,7 @@ class _GamePageState extends State<GamePage> {
               height: 20,
             ),
             new FloatingActionButton(
+              key: Key('spotifyButton'),
               heroTag: null,
               onPressed: () {
                 Navigator.of(context).push(
@@ -320,9 +322,8 @@ class _GamePageState extends State<GamePage> {
               ),
             ),
             SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+              child: ListView(
+                shrinkWrap: true,
                 children: [
                   SizedBox(
                     height: 20,
@@ -373,6 +374,7 @@ class _GamePageState extends State<GamePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
+                    key: Key('Row'),
                     children: [
                       Column(
                         children: [
